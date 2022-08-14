@@ -1,1 +1,0 @@
-{"name":"Local: ankit","url":"c:\\Users\\sharm\\Desktop\\Some well known algos\\ankit.cpp","tests":[{"id":1660224943495,"input":"2\n3 2\n1 2","output":"1"},{"id":1660225622655,"input":"1\n3 \n4 3 2\n1 1 2","output":"1"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\sharm\\Desktop\\Some well known algos\\ankit.cpp","group":"local","local":true}
