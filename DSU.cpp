@@ -24,6 +24,13 @@ void merge(int x, int y){
     len[x] += len[y];
     len[y] = 0;
 }
+void init(){
+    int n, m;
+    cin >> n, m;
+    color.resize(n + 1);
+    len.resize(n + 1, 1);
+    adj.clear();
+}
 
 int main()
 {

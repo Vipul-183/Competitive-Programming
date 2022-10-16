@@ -1,72 +1,85 @@
 #include <bits/stdc++.h>
 
-#define fast                          \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(0);                       \
-    cout.tie(0);
-
-#define ll long long
-#define ld long double
-#define lb lower_bound
-#define pb push_back
-#define fi(i, a, b) for (ll i = a; i < b; i++)
-#define vll vector<ll>
-#define vpll vector<pll>
-#define vvl vector<vector<ll>>
-#define all(v) v.begin(), v.end()
-#define rev(v) reverse(v.begin(), v.end())
-#define srt(v) sort(v.begin(), v.end())
-#define rsrt(v) sort(v.rbegin(), v.rend())
-#define mxe(v) *max_element(v.begin(), v.end())
-#define pll pair<ll, ll>
-#define ff first
-#define ss second
-#define mll map<ll, ll>
-#define gcd(a, b) __gcd(a, b)
-#define lcm(a, b) ((a)*1ll * (b)) / gcd(a, b)
-#define nl "\n"
-#define sp " "
-#define sz(x) (int)x.size()
-#define each(a, b)	for(auto& a : b)
-#define take(v) for (auto i : v ) cin >> i ;
-
 using namespace std;
 
-ld PI = (acos(-1));
-ll md = 1000000007;
-// ll md = 998244353;
-ll pw(ll a, ll b){ll c=1,m=a;while (b){if (b&1)c=(c*m);m=(m*m);b/=2;}return c;}
-ll pwmd(ll a, ll b){ll c = 1, m = a;while (b){if (b & 1)c = ((c * m)) % md;m = (m * m) % md;b /= 2;}return c;}
-ll modinv(ll n){return pwmd(n, md - 2);}
-bool prime(ll a){for(int i=2;i*i<=a;i++){if(a%i==0)return false;}return true;}
-ll ceel(ll a,ll b){if(a%b==0) return a/b;else return a/b+1;}
+ll seg_len = 0;
+vector<ll> seg;
 
+void build(int N, vector<int> arr)
+{
+    seg.clear();
+    seg_len = (ll)(log2(N));
 
-////////////////////////////////////////////////////      ¯\_(ツ)_/¯       \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    if (__builtin_popcount(N) > 1)
+        seg_len++;
+    seg_len = (1 << seg_len);
 
+    seg_len *= 2;
+    for (int i = 0; i < seg_len; i++)
+    { // depends
+        seg.push_back(1000000000);
+    }
+    for (int i = seg_len / 2; i < seg_len / 2 + N; i++)
+    {
+        seg[i] = (arr[i - seg_len / 2]);
+    }
 
-
-
-
-void solve(){
-    
+    // Code below depends on the problem
+    for (int i = seg_len / 2 - 1; i > 0; i--)
+    {
+        seg[i] = min(seg[2 * i], seg[(2 * i) + 1]);
+    }
 }
 
-
-
-
-signed main()
+// ask queries like query(1, x, y, 1, seg_len/2)
+int query(int node, int x, int y, int start, int end)
 {
-    fast;
-    // t = 1;
-    
-    ll tests = 1;
-    // cin >> tests;
-    while (tests--)
+    if (x <= start && y >= end)
     {
-        // cout<<"Case #"<<t<<": ";
-        // t++;
-        solve();
+        return seg[node];
+    }
+    if (x > end || y < start)
+    {
+        return 1000000000; // depends on problem
+    }
+    int mid = (start + end) / 2;
+    return min(query(2 * node, x, y, start, mid), query(2 * node + 1, x, y, mid + 1, end));
+}
+
+void update(int index, int value)
+{
+    // x is 1 based index
+    int ind = index + (seg_len / 2) - 1;
+    seg[ind] = value;
+    while (ind / 2 > 0)
+    {
+        ind /= 2;
+        seg1[ind] = seg1[2 * ind] + seg1[(2 * ind) + 1];
+    }
+}
+
+int main()
+{
+    int N, Q;
+    cin >> N >> Q;
+    vector<int> arr(N);
+    for (int i = 0; i < N; i++)
+        cin >> arr[i];
+
+    build(N, arr);
+
+    for (int i = 0; i < Q; i++)
+    {
+        int x, y, z;
+        cin >> x >> y >> z;
+        if (x == 2)
+        {
+            cout << query(1, y, z, 1, seg_len / 2) << "\n";
+        }
+        else
+        {
+            update(y, z);
+        }
     }
 
     return 0;
